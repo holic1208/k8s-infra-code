@@ -43,3 +43,26 @@ resource "helm_release" "aws-load-balancer-controller" {
     value = data.terraform_remote_state.aws-load-balancer-controller.outputs.aws-load-balancer-controller_role_arn
   }
 }
+
+resource "helm_release" "external-dns" {
+  name       = "external-dns"
+  repository = "https://kubernetes-sigs.github.io/external-dns"
+  chart      = "external-dns"
+  version    = "1.15.0"
+  namespace  = "kube-system"
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = data.terraform_remote_state.external-dns.outputs.external-dns_role_arn
+  }
+
+  set {
+    name  = "policy"
+    value = "sync"
+  }
+
+  set {
+    name  = "nodeSelector.role"
+    value = "general"
+  }
+}
