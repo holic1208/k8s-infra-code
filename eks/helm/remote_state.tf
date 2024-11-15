@@ -33,3 +33,15 @@ data "terraform_remote_state" "aws-load-balancer-controller" {
     }
   }
 }
+
+data "terraform_remote_state" "external-dns" {
+  backend = "remote"
+
+  config = {
+    organization = "sangun-admin"
+
+    workspaces = {
+      name = "k8s-infra-code_iam_external-dns"
+    }
+  }
+}
