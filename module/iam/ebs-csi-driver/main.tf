@@ -32,6 +32,6 @@ resource "aws_iam_role" "ebs-csi-driver_role" {
   assume_role_policy = data.aws_iam_policy_document.policy_document.json
 
   tags = {
-    Name = format("${var.name}-%s-%s-%s-%s", "ebs", "csi", "driver", "role")
+    Name = format("${var.name}-%s-%s", "ebs-csi-driver", "role")
   }
 }
