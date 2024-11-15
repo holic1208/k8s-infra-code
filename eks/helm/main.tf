@@ -10,3 +10,36 @@ resource "helm_release" "metrics-server" {
     value = "monitoring"
   }
 }
+
+resource "helm_release" "aws-load-balancer-controller" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  version    = "1.8.1"
+  namespace  = "kube-system"
+
+  set {
+    name  = "nodeSelector.role"
+    value = "general"
+  }
+
+  set {
+    name  = "clusterName"
+    value = data.terraform_remote_state.eks.outputs.eks_id
+  }
+
+  set {
+    name  = "region"
+    value = "ap-northeast-2"
+  }
+
+  set {
+    name  = "vpcId"
+    value = data.terraform_remote_state.vpc.outputs.vpc_id
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = data.terraform_remote_state.aws-load-balancer-controller.outputs.aws-load-balancer-controller_role_arn
+  }
+}
