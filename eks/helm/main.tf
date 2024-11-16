@@ -66,3 +66,30 @@ resource "helm_release" "external-dns" {
     value = "general"
   }
 }
+
+resource "helm_release" "external-secrets" {
+  name       = "external-secrets"
+  repository = "https://charts.external-secrets.io"
+  chart      = "external-secrets"
+  version    = "0.10.0"
+  namespace  = "external-secrets"
+
+  set {
+    name  = "global.nodeSelector.role"
+    value = "general"
+  }
+
+  set {
+    name  = "fullnameOverride"
+    value = "external-secrets"
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = data.terraform_remote_state.external-secrets.outputs.external-secrets_role_arn
+  }
+
+  depends_on = [
+    kubernetes_namespace.external_secrets
+  ]
+}
