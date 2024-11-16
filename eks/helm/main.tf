@@ -2,12 +2,17 @@ resource "helm_release" "metrics-server" {
   name       = "metrics-server"
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "metrics-server"
-  version    = "7.2.6"
+  version    = "7.2.16"
   namespace  = "kube-system"
 
   set {
     name  = "nodeSelector.role"
     value = "monitoring"
+  }
+  
+  set {
+    name  = "apiService.create"
+    value = "true"
   }
 }
 
