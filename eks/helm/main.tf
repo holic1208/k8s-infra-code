@@ -48,7 +48,7 @@ resource "helm_release" "aws-load-balancer-controller" {
     value = data.terraform_remote_state.aws-load-balancer-controller.outputs.aws-load-balancer-controller_role_arn
   }
 
-# from v2.5, the default option is true. If you deploy multiple helm cahrt at the same time, you don't need to use that option if you use it or set depends_on to another helm chart
+# from v2.5, the default option is true. If you deploy multiple helm chart at the same time, you don't need to use that option if you use it or set depends_on to another helm chart
   set {
     name  = "enableServiceMutatorWebhook"
     value = "false"
