@@ -45,3 +45,15 @@ data "terraform_remote_state" "external-dns" {
     }
   }
 }
+
+data "terraform_remote_state" "external-secrets" {
+  backend = "remote"
+
+  config = {
+    organization = "sangun-admin"
+
+    workspaces = {
+      name = "k8s-infra-code_iam_external-secrets"
+    }
+  }
+}
