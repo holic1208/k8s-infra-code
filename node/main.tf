@@ -18,6 +18,6 @@ module "node" {
   min_size          = 1
   max_size          = 5
   desired_capacity  = 1
-  subnet_ids        = [data.terraform_remote_state.vpc.outputs.subnet_ids[0], data.terraform_remote_state.vpc.outputs.subnet_ids[1]]
+  subnet_ids        = [data.terraform_remote_state.vpc.outputs.subnet_ids[0], data.terraform_remote_state.vpc.outputs.subnet_ids[2]]
   health_check_type = var.health_check_type
 }
