@@ -27,10 +27,3 @@ resource "aws_iam_role" "ebs-csi-driver_role" {
     Name = format("${var.name}-%s-%s", "ebs-csi-driver", "role")
   }
 }
-
-resource "aws_eks_pod_identity_association" "ebs-csi-driver_association" {
-  cluster_name    = var.eks_name
-  namespace       = var.namespace
-  service_account = var.sa_name
-  role_arn        = aws_iam_role.ebs-csi-driver_role.arn
-}
