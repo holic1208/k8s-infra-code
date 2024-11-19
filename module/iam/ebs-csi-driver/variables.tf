@@ -3,11 +3,6 @@ variable "name" {
   default = ""
 }
 
-variable "eks_name" {
-  type    = string
-  default = ""
-}
-
 variable "sa_name" {
   type    = string
   default = ""
