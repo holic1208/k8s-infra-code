@@ -4,7 +4,7 @@ terraform {
     organization = "sangun-admin"
 
     workspaces {
-      name = "k8s-infra-code_eks_addons"
+      name = "k8s-infra-code_eks_addons_ebs-csi-driver"
     }
   }
 }
