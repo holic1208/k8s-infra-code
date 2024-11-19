@@ -3,12 +3,7 @@ variable "name" {
   default = ""
 }
 
-variable "irsa_arn" {
-  type    = string
-  default = ""
-}
-
-variable "eks_oidc" {
+variable "eks_name" {
   type    = string
   default = ""
 }

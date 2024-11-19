@@ -5,25 +5,17 @@ resource "aws_iam_role_policy_attachment" "external-dns_policy" {
 
 data "aws_iam_policy_document" "policy_document" {
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect = "Allow"
 
     principals {
-      type        = "Federated"
-      identifiers = [var.irsa_arn]
+      type        = "Service"
+      identifiers = ["pods.eks.amazonaws.com"]
     }
 
-    condition {
-      test     = "StringEquals"
-      variable = join(":", [element(regex("https://(.+)", var.eks_oidc), 0), "aud"])
-      values   = ["sts.amazonaws.com"]
-    }
-
-    condition {
-      test     = "StringEquals"
-      variable = join(":", [element(regex("https://(.+)", var.eks_oidc), 0), "sub"])
-      values   = ["system:serviceaccount:${var.namespace}:${var.sa_name}"]
-    }
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
   }
 }
 
@@ -66,4 +58,11 @@ resource "aws_iam_role" "external-dns_role" {
   tags = {
     Name = format("${var.name}-%s-%s", "external-dns", "role")
   }
+}
+
+resource "aws_eks_pod_identity_association" "external-dns_association" {
+  cluster_name    = var.eks_name
+  namespace       = var.namespace
+  service_account = var.sa_name
+  role_arn        = aws_iam_role.external-dns_role.arn
 }
