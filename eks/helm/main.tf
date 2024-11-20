@@ -131,4 +131,9 @@ resource "helm_release" "cluster-autoscaler" {
     name  = "rbac.serviceAccount.name"
     value = "cluster-autoscaler"
   }
+
+  set {
+    name  = "awsRegion"
+    value = "ap-northeast-2"
+  }
 }
