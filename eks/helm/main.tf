@@ -44,8 +44,8 @@ resource "helm_release" "aws-load-balancer-controller" {
   }
 
   set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = data.terraform_remote_state.aws-load-balancer-controller.outputs.aws-load-balancer-controller_role_arn
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
   }
 
 # from v2.5, the default option is true. If you deploy multiple helm chart at the same time, you don't need to use that option if you use it or set depends_on to another helm chart
@@ -63,18 +63,18 @@ resource "helm_release" "external-dns" {
   namespace  = "kube-system"
 
   set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = data.terraform_remote_state.external-dns.outputs.external-dns_role_arn
+    name  = "nodeSelector.role"
+    value = "general"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = "external-dns"
   }
 
   set {
     name  = "policy"
     value = "sync"
-  }
-
-  set {
-    name  = "nodeSelector.role"
-    value = "general"
   }
 }
 
@@ -96,11 +96,39 @@ resource "helm_release" "external-secrets" {
   }
 
   set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = data.terraform_remote_state.external-secrets.outputs.external-secrets_role_arn
+    name  = "serviceAccount.name"
+    value = "external-secrets"
   }
 
   depends_on = [
     kubernetes_namespace.external_secrets
   ]
+}
+
+resource "helm_release" "cluster-autoscaler" {
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  version    = "9.43.2"
+  namespace  = "kube-system"
+
+  set {
+    name  = "nodeSelector.role"
+    value = "general"
+  }
+
+  set {
+    name  = "fullnameOverride"
+    value = "cluster-autoscaler"
+  }
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = data.terraform_remote_state.eks.outputs.eks_id
+  }
+
+  set {
+    name  = "rbac.serviceAccount.name"
+    value = "cluster-autoscaler"
+  }
 }
