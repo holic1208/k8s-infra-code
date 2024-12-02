@@ -1,11 +1,9 @@
 data "terraform_remote_state" "eks" {
-  backend = "remote"
+  backend = "s3"
 
   config = {
-    organization = "sangun-admin"
-
-    workspaces = {
-      name = "k8s-infra-code_eks"
-    }
+    bucket = "backend-k8s-infra-code"
+    key    = "eks/terraform.tfstate"
+    region = "ap-northeast-2"
   }
 }

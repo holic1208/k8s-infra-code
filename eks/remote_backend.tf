@@ -1,10 +1,8 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "sangun-admin"
-
-    workspaces {
-      name = "k8s-infra-code_eks"
-    }
+  backend "s3" {
+    bucket         = "backend-k8s-infra-code"
+    key            = "eks/terraform.tfstate"
+    region         = "ap-northeast-2"
+    dynamodb_table = "terraform-lock-table"
   }
 }
