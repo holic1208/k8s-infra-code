@@ -1,10 +1,8 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "sangun-admin"
-
-    workspaces {
-      name = "k8s-infra-code_eks_addons_pod-identity-agent"
-    }
+  backend "s3" {
+    bucket         = "backend-k8s-infra-code"
+    key            = "eks/addons/pod-identity-agent/terraform.tfstate"
+    region         = "ap-northeast-2"
+    dynamodb_table = "terraform-lock-table"
   }
 }

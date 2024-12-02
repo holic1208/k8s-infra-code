@@ -1,10 +1,8 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "sangun-admin"
-
-    workspaces {
-      name = "k8s-infra-code_iam_aws-load-balancer-controller"
-    }
+  backend "s3" {
+    bucket         = "backend-k8s-infra-code"
+    key            = "iam/aws-load-balancer-controller/terraform.tfstate"
+    region         = "ap-northeast-2"
+    dynamodb_table = "terraform-lock-table"
   }
 }
